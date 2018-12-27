@@ -1,6 +1,9 @@
 import { Component } from "react"
 import { Spin, Row, Col, Button, Card, Pagination } from "antd"
 import { connect } from "dva"
+import router from "umi/router"
+import CompanyState from "component/companyState"
+import styles from "./index.css"
 
 class MyCompany extends Component {
   constructor () {
@@ -12,20 +15,21 @@ class MyCompany extends Component {
   }
 
   componentDidMount () {
-    // this.props.getCompanyList(this.state)
+    this.props.getCompanyList(this.state)
   }
 
   handleChangePage (page) {
     this.setState({
       pageNum: page
-    }, () => {
-      // this.props.getCompanyList(this.state)
-    })
+    }, () => this.props.getCompanyList(this.state))
+  }
+  
+  handleViewCompany (id) {
+    router.push(`/myCompany/viewCompany/${id}`)
   }
 
   render () {
     const { companyList, loading, total } = this.props
-    // console.log(data)
     return (
       <div className="container">
         <Spin spinning={ loading }>
@@ -37,20 +41,25 @@ class MyCompany extends Component {
               <Button type="primary">创建或加入公司</Button>
             </Col>
           </Row>
-          <div style={{ margin: "10px 0 20px" }}>
+          <div style={{ marginTop: "10px" }}>
             <Row gutter={ 20 }>
               {
-                companyList.length? (companyList.map(company => (
+                companyList.length? companyList.map(company => (
                   <Col span={ 8 } key={ company.id }>
-                    <Card style={{ backgroundColor: "#F2F2F2" }} bordered={ false }>
-                      { company.name }
+                    <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
+                      onClick={ () => this.handleViewCompany(company.id) }
+                    >
+                      <img src={ company.companyLogo } alt="公司logo" className={ styles.logo } />
+                      <p className={ styles.name }>
+                        <CompanyState state={ company.state } />
+                        { company.name }
+                      </p>
                     </Card>
                   </Col>
-                ))
-                ): (
+                )): (
                   <Col span={ 24 }>
-                    <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center" }} bordered={ false }>
-                      暂无公司
+                    <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }>
+                      <p>暂无公司</p>
                     </Card>
                   </Col>
                 )

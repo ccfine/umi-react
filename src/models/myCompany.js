@@ -20,6 +20,7 @@ export default {
       return {
         ...state,
         companyList: action.list,
+        total: action.total,
         loading: false
       }
     }
@@ -31,7 +32,8 @@ export default {
       const data = yield effects.call(fetchCompanyList, action.payload)
       yield effects.put({
         type: "companyList",
-        list: data.data.data.list
+        list: data.data.data.list,
+        total: data.data.data.total
       })
     }
   }

@@ -1,3 +1,5 @@
+const path = require("path")
+
 // ref: https://umijs.org/config/
 export default {
   plugins: [
@@ -14,4 +16,7 @@ export default {
       hardSource: true,
     }],
   ],
+  alias: {
+    component: path.resolve(__dirname, "./src/component")
+  }
 }

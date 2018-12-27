@@ -5,10 +5,10 @@ export const fetchCompanyList = payload => {
     axios({
       method: "GET",
       url: "/ms/api/v1/uc/company/selectMy",
-      baseURL: "http://192.168.6.11:8082/",
+      baseURL: "http://user-app-dev.devops.servingcloud.com/",
       params: payload,
       headers: {
-        token: "098a21d6e1af4d71a5285cd95ae4c9c6"
+        token: "c183399ba14943f5befec9ba183ba495"
       }   
     }).then(res => {
       resolve(res)
