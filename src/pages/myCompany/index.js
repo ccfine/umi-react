@@ -24,8 +24,12 @@ class MyCompany extends Component {
     }, () => this.props.getCompanyList(this.state))
   }
   
-  handleViewCompany (id) {
-    router.push(`/myCompany/viewCompany/${id}`)
+  handleViewCompany (id, state) {
+    if (state === 0) {
+
+    } else {
+      router.push(`/myCompany/viewCompany/?id=${id}&state=${state}`)
+    }
   }
 
   render () {
@@ -47,7 +51,7 @@ class MyCompany extends Component {
                 companyList.length? companyList.map(company => (
                   <Col span={ 8 } key={ company.id }>
                     <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
-                      onClick={ () => this.handleViewCompany(company.id) }
+                      onClick={ () => this.handleViewCompany(company.id, company.state) }
                     >
                       <img src={ company.companyLogo } alt="公司logo" className={ styles.logo } />
                       <p className={ styles.name }>

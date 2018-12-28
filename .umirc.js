@@ -17,6 +17,7 @@ export default {
     }],
   ],
   alias: {
-    component: path.resolve(__dirname, "./src/component")
+    component: path.resolve(__dirname, "./src/component"),
+    utils: path.resolve(__dirname, "./src/utils")
   }
 }

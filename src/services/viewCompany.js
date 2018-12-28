@@ -1,10 +1,10 @@
 import axios from "axios"
 
-export const fetchCompanyList = payload => {
+export const fetchCompanyInformation = payload => {
   return new Promise((resolve, reject) => {
     axios({
       method: "GET",
-      url: "/ms/api/v1/uc/company/selectMy",
+      url: "/ms/api/v1/uc/company/query",
       baseURL: "http://user-app-dev.devops.servingcloud.com/",
       params: payload,
       headers: {
