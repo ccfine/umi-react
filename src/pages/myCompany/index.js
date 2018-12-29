@@ -4,6 +4,7 @@ import { connect } from "dva"
 import router from "umi/router"
 import CompanyState from "component/companyState"
 import styles from "./index.css"
+import { getImg } from "utils/img.js"
 
 class MyCompany extends Component {
   constructor () {
@@ -25,15 +26,21 @@ class MyCompany extends Component {
   }
   
   handleViewCompany (id, state) {
-    if (state === 0) {
-
+    //如果state为0（正常）或1（已停用），则跳转到组织管理，否则跳转到查看公司信息
+    if (state === 0 || state === 1) {
+      router.push(`/myCompany/viewCompany/?id=${id}&state=${state}`)
     } else {
       router.push(`/myCompany/viewCompany/?id=${id}&state=${state}`)
     }
   }
 
+  handleImg () {
+    console.log("load")
+  }
+ 
   render () {
     const { companyList, loading, total } = this.props
+
     return (
       <div className="container">
         <Spin spinning={ loading }>
@@ -46,21 +53,24 @@ class MyCompany extends Component {
             </Col>
           </Row>
           <div style={{ marginTop: "10px" }}>
-            <Row gutter={ 20 }>
+            {/* <Row gutter={ 20 }> */}
               {
-                companyList.length? companyList.map(company => (
-                  <Col span={ 8 } key={ company.id }>
-                    <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
-                      onClick={ () => this.handleViewCompany(company.id, company.state) }
-                    >
-                      <img src={ company.companyLogo } alt="公司logo" className={ styles.logo } />
-                      <p className={ styles.name }>
-                        <CompanyState state={ company.state } />
-                        { company.name }
-                      </p>
-                    </Card>
-                  </Col>
-                )): (
+                companyList.length? companyList.map(company => {
+                  getImg(company.id, company.companyLogo)
+                })
+                  // return (
+                  //   <Col span={ 8 } key={ company.id }>
+                  //     <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
+                  //       onClick={ () => this.handleViewCompany(company.id, company.state) }
+                  //     >              
+                  //       <img src={ src } alt="公司logo" className={ styles.logo } onLoad={() => this.handleImg()} />
+                  //       <p className={ styles.name }>
+                  //         <CompanyState state={ company.state } />{ company.name }
+                  //       </p>
+                  //     </Card>
+                  //   </Col>
+                  // )
+                : (
                   <Col span={ 24 }>
                     <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }>
                       <p>暂无公司</p>
@@ -68,7 +78,7 @@ class MyCompany extends Component {
                   </Col>
                 )
               }
-            </Row>
+            {/* </Row> */}
           </div>
           <Pagination current={ this.state.pageNum }  pageSize={ this.state.pageSize } showQuickJumper={ true } 
             size="small" total={ total } onChange={ page => this.handleChangePage(page) } />

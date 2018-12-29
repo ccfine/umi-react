@@ -8,7 +8,7 @@ export const fetchCompanyInformation = payload => {
       baseURL: "http://user-app-dev.devops.servingcloud.com/",
       params: payload,
       headers: {
-        token: "729ef4137f024824855f3679c1a46004"
+        token: "75f0b70c06f34c24a21f4d040a6d7e8a"
       }   
     }).then(res => {
       resolve(res)

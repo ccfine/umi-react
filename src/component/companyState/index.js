@@ -27,6 +27,7 @@ export default class CompanyState extends PureComponent {
     } else {
       state = null
     }
+    
     return (
       <Fragment>
         { state }
