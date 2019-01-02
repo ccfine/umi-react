@@ -4,8 +4,8 @@ import { connect } from "dva"
 import router from "umi/router"
 import CompanyState from "component/companyState"
 import styles from "./index.css"
-import { getImg } from "utils/img.js"
-
+import { fetchImg } from "utils/img.js"
+ 
 class MyCompany extends Component {
   constructor () {
     super() 
@@ -16,13 +16,20 @@ class MyCompany extends Component {
   }
 
   componentDidMount () {
-    this.props.getCompanyList(this.state)
+    this._getCompanyList()
+  }
+
+  async _getCompanyList () {
+    await this.props.getCompanyList(this.state)
+    this.props.companyList.forEach((company, index) => 
+      fetchImg(company.id, company.companyLogo).then(res => this.props.addCompanyLogo(index, res))  
+    )
   }
 
   handleChangePage (page) {
     this.setState({
       pageNum: page
-    }, () => this.props.getCompanyList(this.state))
+    }, () => this._getCompanyList())
   }
   
   handleViewCompany (id, state) {
@@ -33,14 +40,10 @@ class MyCompany extends Component {
       router.push(`/myCompany/viewCompany/?id=${id}&state=${state}`)
     }
   }
-
-  handleImg () {
-    console.log("load")
-  }
  
   render () {
     const { companyList, loading, total } = this.props
-
+  
     return (
       <div className="container">
         <Spin spinning={ loading }>
@@ -53,24 +56,20 @@ class MyCompany extends Component {
             </Col>
           </Row>
           <div style={{ marginTop: "10px" }}>
-            {/* <Row gutter={ 20 }> */}
+            <Row gutter={ 20 }>
               {
-                companyList.length? companyList.map(company => {
-                  getImg(company.id, company.companyLogo)
-                })
-                  // return (
-                  //   <Col span={ 8 } key={ company.id }>
-                  //     <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
-                  //       onClick={ () => this.handleViewCompany(company.id, company.state) }
-                  //     >              
-                  //       <img src={ src } alt="公司logo" className={ styles.logo } onLoad={() => this.handleImg()} />
-                  //       <p className={ styles.name }>
-                  //         <CompanyState state={ company.state } />{ company.name }
-                  //       </p>
-                  //     </Card>
-                  //   </Col>
-                  // )
-                : (
+                companyList.length? companyList.map(company => (
+                  <Col span={ 8 } key={ company.id }>
+                    <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
+                      onClick={ () => this.handleViewCompany(company.id, company.state) }
+                    >              
+                      <img src={ company.logo } alt="公司logo" className={ styles.logo } />
+                      <p className={ styles.name }>
+                        <CompanyState state={ company.state } />{ company.name }
+                      </p>
+                    </Card>
+                  </Col>
+                )): (
                   <Col span={ 24 }>
                     <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }>
                       <p>暂无公司</p>
@@ -78,7 +77,7 @@ class MyCompany extends Component {
                   </Col>
                 )
               }
-            {/* </Row> */}
+            </Row>
           </div>
           <Pagination current={ this.state.pageNum }  pageSize={ this.state.pageSize } showQuickJumper={ true } 
             size="small" total={ total } onChange={ page => this.handleChangePage(page) } />
@@ -95,6 +94,12 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "myCompany/getCompanyList", 
       payload
+    }),
+  addCompanyLogo: (index, src) =>
+    dispatch({
+      type: "myCompany/addCompanyLogo",
+      index,
+      src
     })
 })
 

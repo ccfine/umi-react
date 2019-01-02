@@ -11,7 +11,7 @@ export default class CompanyInformation extends PureComponent {
   render () {
     const { name, creditCode, companyPlaceRegister, companyPlace, dueStartDate, dueEndDate, companyType, 
       businessScope, companyLogo, businessLicenceId, legalPersonName, legalPersonCode, legalParValStaTime, 
-      legalParValEndTime, legalPersonPhone, legalPersonEmail, legalPersonIds
+      legalParValEndTime, legalPersonPhone, legalPersonEmail, legalPersonIds, state
     } = this.props.information
     let type = ""
     switch (companyType) {
@@ -29,7 +29,8 @@ export default class CompanyInformation extends PureComponent {
 
     return (
       <Fragment>
-        <Card title="公司信息" style={{ marginBottom: "20px" }} extra={ <a>编辑</a> }>
+        { /*驳回、暂存状态可编辑，审核状态不可编辑*/ }
+        <Card title="公司信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a>编辑</a>): null }>
           <Row>
             <Col span={ 12 }>
               <div style={{ marginBottom: "10px" }}>公司名称：{ name }</div>
@@ -50,7 +51,7 @@ export default class CompanyInformation extends PureComponent {
             </Col>
           </Row>     
         </Card>
-        <Card title="法人代表信息" style={{ marginBottom: "20px" }} extra={ <a>编辑</a> }>
+        <Card title="法人代表信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a>编辑</a>): null }>
           <Row>
             <Col span={ 10 }> 
               <div style={{ marginBottom: "10px" }}>姓名：{ legalPersonName }</div>
@@ -66,7 +67,7 @@ export default class CompanyInformation extends PureComponent {
             </Col>
           </Row>          
         </Card>
-        <Card title="管理员信息" style={{ marginBottom: "20px" }} extra={ <a>编辑</a> }>
+        <Card title="管理员信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a>编辑</a>): null }>
           <Row>
             <Col span={ 10 }>
               <div>姓名：</div>

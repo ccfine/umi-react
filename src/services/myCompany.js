@@ -8,12 +8,10 @@ export const fetchCompanyList = payload => {
       baseURL: "http://user-app-dev.devops.servingcloud.com/",
       params: payload,
       headers: {
-        token: "75f0b70c06f34c24a21f4d040a6d7e8a"
+        token: "23e00b919b6c4ccbbdd6625f33a4571e"
       }   
-    }).then(res => {
-      resolve(res)
-    }).catch(err => {
-      reject(err)
     })
+    .then(res => resolve(res))
+    .catch(err => reject(err))
   })
 }
