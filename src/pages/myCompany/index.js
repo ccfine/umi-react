@@ -21,7 +21,7 @@ class MyCompany extends Component {
 
   async _getCompanyList () {
     await this.props.getCompanyList(this.state)
-    this.props.companyList.forEach((company, index) => 
+    this.props.companyList.forEach((company, index) =>
       fetchImg(company.id, company.companyLogo).then(res => this.props.addCompanyLogo(index, res))  
     )
   }
@@ -58,8 +58,8 @@ class MyCompany extends Component {
           <div style={{ marginTop: "10px" }}>
             <Row gutter={ 20 }>
               {
-                companyList.length? companyList.map(company => (
-                  <Col span={ 8 } key={ company.id }>
+                companyList.length? companyList.map((company, index) => (
+                  <Col span={ 8 } key={ index }>
                     <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
                       onClick={ () => this.handleViewCompany(company.id, company.state) }
                     >              

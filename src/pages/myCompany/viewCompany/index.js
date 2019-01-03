@@ -1,5 +1,5 @@
 import { Component } from "react"
-import { Spin } from "antd"
+import { Spin, Button } from "antd"
 import { connect } from "dva"
 import CompanyState from "component/companyState"
 import CompanyInformation from "component/companyInformation"
@@ -20,6 +20,11 @@ class ViewCompany extends Component {
             <CompanyState state={ state } />{ name }
           </h2>
           <CompanyInformation information={ companyInformation } />
+          {
+            state === 0? (
+              <Button>申请加入公司</Button>
+            ): null
+          }
         </Spin>
       </div>
     )
