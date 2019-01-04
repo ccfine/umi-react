@@ -6,24 +6,26 @@ import CompanyInformation from "components/companyInformation"
 
 class ViewCompany extends Component {
   componentDidMount () {
-    this.props.getCompanyInformation(this.props.location.query)
+    const { query } = this.props.location,
+          { id, state } = query
+    this.props.getCompanyInformation(query)
     //暂存、驳回状态需要审核结果
-    // if (this.props.companyInformation.state === 3 || this.props.companyInformation.state === 5 || this.props.companyInformation.state === 6) {
-
-    // }
+    if (state === "3" || state === "5" || state === "6") {
+      this.props.getAuditResult(id)
+    }
   }
 
   render () {
-    const { loading, companyInformation } = this.props,
+    const { loading, companyInformation, auditResult } = this.props,
           { state, name } = companyInformation
-
+    
     return (
       <div className="container">
         <Spin spinning={ loading }>
           <h2>
             <CompanyState state={ state } />{ name }
           </h2>
-          <CompanyInformation information={ companyInformation } />
+          <CompanyInformation information={ companyInformation } result={ auditResult } />
           {
             state === 0? (
               <Button>申请加入公司</Button>

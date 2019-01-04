@@ -4,7 +4,6 @@ import { connect } from "dva"
 import router from "umi/router"
 import CompanyState from "components/companyState"
 import styles from "./index.css"
-import { fetchImg } from "utils/img.js"
  
 class MyCompany extends Component {
   constructor () {
@@ -21,9 +20,14 @@ class MyCompany extends Component {
 
   async _getCompanyList () {
     await this.props.getCompanyList(this.state)
-    this.props.companyList.forEach((company, index) =>
-      fetchImg(company.id, company.companyLogo).then(res => this.props.addCompanyLogo(index, res))  
-    )
+    const arr = this.props.companyList.map(company => ({
+      companyId: company.id,
+      fileInfoId: company.companyLogo,
+      moduleCode: "default",
+      productLineId: 1,
+      userId: 1
+    }))
+    this.props.getCompanyLogo(arr)
   }
 
   handleChangePage (page) {
@@ -95,11 +99,10 @@ const mapDispatchToProps = dispatch => ({
       type: "myCompany/getCompanyList", 
       payload
     }),
-  addCompanyLogo: (index, src) =>
+  getCompanyLogo: arr =>
     dispatch({
-      type: "myCompany/addCompanyLogo",
-      index,
-      src
+      type: "myCompany/getCompanyLogo",
+      arr
     })
 })
 

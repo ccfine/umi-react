@@ -5,7 +5,8 @@ import { getDate } from "utils/date.js"
 
 export default class CompanyInformation extends Component {
   static propTypes = {
-    information: PropTypes.object.isRequired
+    information: PropTypes.object.isRequired,
+    result: PropTypes.object.isRequired
   }
 
   constructor () {
@@ -37,23 +38,12 @@ export default class CompanyInformation extends Component {
   }
 
   render () {
-    const { state, name, creditCode, companyPlaceRegister, companyPlace, dueStartDate, dueEndDate, companyType, businessScope, companyLogo,
-      businessLicenceId, legalPersonName, legalPersonCode, legalParValStaTime, legalParValEndTime, legalPersonPhone, legalPersonEmail, 
-      legalPersonIds, createBy } = this.props.information,
+    const { information: { state, name, creditCode, companyPlaceRegister, companyPlace, dueStartDate, dueEndDate, companyType, businessScope, companyLogo,
+                           businessLicenceId, legalPersonName, legalPersonCode, legalParValStaTime, legalParValEndTime, legalPersonPhone, legalPersonEmail, 
+                           legalPersonIds, createBy },
+            result: { processRemark, updateBy, updateTime, verificationState }
+          } = this.props,
           { visible, title } = this.state
-    let type = ""
-    switch (companyType) {
-      case 0:
-        type = "集团"
-        break
-      case 1: 
-        type = "独立公司"
-        break
-      case 2:
-        type = "法人公司"
-        break
-      default:
-    }
 
     return (
       <Fragment>
@@ -66,7 +56,7 @@ export default class CompanyInformation extends Component {
               <div style={{ marginBottom: "10px" }}>公司注册地址：{ companyPlaceRegister }</div>
               <div style={{ marginBottom: "10px" }}>经营地址：{ companyPlace }</div>
               <div style={{ marginBottom: "10px" }}>营业期限：{ getDate(dueStartDate) } ~ { getDate(dueEndDate) }</div>
-              <div style={{ marginBottom: "10px" }}>公司类型：{ type }</div>
+              <div style={{ marginBottom: "10px" }}>公司类型：{ companyType === 0? "集团": companyType === 1? "独立公司": companyType === 2? "法人公司": "" }</div>
               <div style={{ marginBottom: "10px" }}>营业范围：{ businessScope }</div>
               <div>
                 公司logo：<img src={ companyLogo } alt="公司logo" />
@@ -115,8 +105,12 @@ export default class CompanyInformation extends Component {
                   <div style={{ display: "flex" }}>
                     <Icon type="close-circle" theme="filled" style={{ color: "red", margin: "4px 10px 0 0" }} /> 
                     <div>
-                      <div style={{ marginBottom: "10px" }}>审核说明的文字内容：</div>
-                      <div>审核时间： 审核人： 审核类型：</div>
+                      <div style={{ marginBottom: "10px" }}>审核说明：{ processRemark }</div>
+                      <div>
+                        <span>审核时间：{ getDate(updateTime) }</span>
+                        <span style={{ margin: "0 10px" }}>审核人：{ updateBy }</span>
+                        <span>审核类型：{ verificationState === 0? "待验证": verificationState === 1? "验证通过": verificationState === 2? "验证不通过": "" }</span>
+                      </div>
                     </div>
                   </div>
                 )

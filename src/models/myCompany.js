@@ -1,4 +1,4 @@
-import { fetchCompanyList } from "../services/myCompany.js"
+import { fetchCompanyList, fetchImg } from "../services/myCompany.js"
 
 export default {
   namespace: "myCompany",
@@ -24,10 +24,15 @@ export default {
         loading: false
       }
     },
-    companyLogo (state, action) {
-      state.companyList[action.index].logo = action.logo
+    addCompanyLogo (state, action) {
+      state.companyList.forEach(company => {
+        if (company.companyLogo === action.id) {
+          company.logo = action.logo
+        }
+      })
       return {
         ...state,
+        companyList: state.companyList,
         loading: false
       }
     }
@@ -43,13 +48,16 @@ export default {
         total: data.data.data.total
       })
     },
-    * addCompanyLogo (action, effects) {
-      yield effects.put({ type: "load" })
-      yield effects.put({
-        type: "companyLogo",
-        index: action.index,
-        logo: action.src
-      })
+    * getCompanyLogo (action, effects) {
+      // yield effects.put({ type: "load" })
+      const data = yield effects.call(fetchImg, action.arr)
+      yield data.data.forEach(item =>
+        effects.put({
+          type: "addCompanyLogo",
+          logo: item.downloadUrl,
+          id: item.fileInfoId
+        })
+      )
     }
   }
 }
