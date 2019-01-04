@@ -1,5 +1,4 @@
 import { fetchCompanyList } from "../services/myCompany.js"
-import { fetchImg } from "utils/img.js"
 
 export default {
   namespace: "myCompany",

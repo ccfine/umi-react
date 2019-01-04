@@ -1,8 +1,8 @@
 import { Component } from "react"
 import { Spin, Button } from "antd"
 import { connect } from "dva"
-import CompanyState from "component/companyState"
-import CompanyInformation from "component/companyInformation"
+import CompanyState from "components/companyState"
+import CompanyInformation from "components/companyInformation"
 
 class ViewCompany extends Component {
   componentDidMount () {

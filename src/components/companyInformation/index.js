@@ -1,9 +1,9 @@
-import { PureComponent, Fragment } from "react"
+import { Component, Fragment } from "react"
 import { Card, Row, Col, Icon, Modal, Button } from "antd"
 import PropTypes from "prop-types"
 import { getDate } from "utils/date.js"
 
-export default class CompanyInformation extends PureComponent {
+export default class CompanyInformation extends Component {
   static propTypes = {
     information: PropTypes.object.isRequired
   }
@@ -11,13 +11,17 @@ export default class CompanyInformation extends PureComponent {
   constructor () {
     super()
     this.state = {
-      visible: false
+      visible: false,
+      title: ""
     }
-    this.handleShowConfirm = this.handleShowConfirm.bind(this)
     this.handleToggleModal = this.handleToggleModal.bind(this)
   }
 
-  handleShowConfirm () {
+  handleShowConfirm (info) {
+    this.setState({
+      title: info === 1? "公司": info === 2? "法人代表": info === 3? "管理员": ""
+    })
+
     Modal.confirm({
       cancelText: "取消",
       okText: "确定",
@@ -33,10 +37,10 @@ export default class CompanyInformation extends PureComponent {
   }
 
   render () {
-    const { name, creditCode, companyPlaceRegister, companyPlace, dueStartDate, dueEndDate, companyType, businessScope, 
-      companyLogo, businessLicenceId, legalPersonName, legalPersonCode, legalParValStaTime, legalParValEndTime, 
-      legalPersonPhone, legalPersonEmail, legalPersonIds, state
-    } = this.props.information
+    const { state, name, creditCode, companyPlaceRegister, companyPlace, dueStartDate, dueEndDate, companyType, businessScope, companyLogo,
+      businessLicenceId, legalPersonName, legalPersonCode, legalParValStaTime, legalParValEndTime, legalPersonPhone, legalPersonEmail, 
+      legalPersonIds, createBy } = this.props.information,
+          { visible, title } = this.state
     let type = ""
     switch (companyType) {
       case 0:
@@ -54,7 +58,7 @@ export default class CompanyInformation extends PureComponent {
     return (
       <Fragment>
         { /*驳回、暂存状态可编辑，审核状态不可编辑*/ }
-        <Card title="公司信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a onClick={ this.handleShowConfirm }>编辑</a>): null }>
+        <Card title="公司信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a onClick={ () => this.handleShowConfirm(1) }>编辑</a>): null }>
           <Row>
             <Col span={ 12 }>
               <div style={{ marginBottom: "10px" }}>公司名称：{ name }</div>
@@ -75,7 +79,7 @@ export default class CompanyInformation extends PureComponent {
             </Col>
           </Row>     
         </Card>
-        <Card title="法人代表信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a onClick={ this.handleShowConfirm }>编辑</a>): null }>
+        <Card title="法人代表信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a onClick={ () => this.handleShowConfirm(2) }>编辑</a>): null }>
           <Row>
             <Col span={ 10 }> 
               <div style={{ marginBottom: "10px" }}>姓名：{ legalPersonName }</div>
@@ -91,10 +95,10 @@ export default class CompanyInformation extends PureComponent {
             </Col>
           </Row>          
         </Card>
-        <Card title="管理员信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a onClick={ this.handleShowConfirm }>编辑</a>): null }>
+        <Card title="管理员信息" style={{ marginBottom: "20px" }} extra={ state === 3 || state === 5 || state === 6? (<a onClick={ () => this.handleShowConfirm(3) }>编辑</a>): null }>
           <Row>
             <Col span={ 10 }>
-              <div>姓名：</div>
+              <div>姓名：{ createBy }</div>
             </Col>  
             <Col span={ 12 }>
               <div>
@@ -121,7 +125,7 @@ export default class CompanyInformation extends PureComponent {
           )
         }
 
-        <Modal visible={ this.state.visible } title="编辑XX信息" centered={ true } destroyOnClose={ true } maskClosable={ false }
+        <Modal visible={ visible } title={ `编辑${title}信息` } centered={ true } destroyOnClose={ true } maskClosable={ false }
           onCancel={ this.handleToggleModal } footer={(
             <div>
               <Button onClick={ this.handleToggleModal }>取消</Button>

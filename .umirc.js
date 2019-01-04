@@ -11,13 +11,23 @@ export default {
       title: '我的公司',
       dll: true,
       routes: {
-        exclude: [],
+        exclude: [
+          /model\.(j|t)sx?$/,
+          /service\.(j|t)sx?$/,
+          /services\.(j|t)sx?$/,
+          /models\//,
+          /components\//,
+          /services\//,
+          /utils\//
+        ],
       },
       hardSource: true,
+      history: "hash",
+      runtimePublicPath: true,
     }],
   ],
   alias: {
-    component: path.resolve(__dirname, "./src/component"),
+    components: path.resolve(__dirname, "./src/components"),
     utils: path.resolve(__dirname, "./src/utils")
-  }
+  },
 }

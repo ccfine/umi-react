@@ -2,7 +2,7 @@ import { Component } from "react"
 import { Spin, Row, Col, Button, Card, Pagination } from "antd"
 import { connect } from "dva"
 import router from "umi/router"
-import CompanyState from "component/companyState"
+import CompanyState from "components/companyState"
 import styles from "./index.css"
 import { fetchImg } from "utils/img.js"
  
@@ -21,9 +21,9 @@ class MyCompany extends Component {
 
   async _getCompanyList () {
     await this.props.getCompanyList(this.state)
-    this.props.companyList.forEach((company, index) =>
-      fetchImg(company.id, company.companyLogo).then(res => this.props.addCompanyLogo(index, res))  
-    )
+    // this.props.companyList.forEach((company, index) =>
+    //   fetchImg(company.id, company.companyLogo).then(res => this.props.addCompanyLogo(index, res))  
+    // )
   }
 
   handleChangePage (page) {
