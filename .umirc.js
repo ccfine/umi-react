@@ -22,12 +22,12 @@ export default {
         ],
       },
       hardSource: true,
-      history: "hash",
-      runtimePublicPath: true,
     }],
   ],
   alias: {
     components: path.resolve(__dirname, "./src/components"),
     utils: path.resolve(__dirname, "./src/utils")
   },
+  history: "hash",
+  runtimePublicPath: true,
 }

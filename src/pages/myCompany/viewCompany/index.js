@@ -7,6 +7,10 @@ import CompanyInformation from "components/companyInformation"
 class ViewCompany extends Component {
   componentDidMount () {
     this.props.getCompanyInformation(this.props.location.query)
+    //暂存、驳回状态需要审核结果
+    // if (this.props.companyInformation.state === 3 || this.props.companyInformation.state === 5 || this.props.companyInformation.state === 6) {
+
+    // }
   }
 
   render () {
@@ -38,6 +42,11 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "viewCompany/getCompanyInformation", 
       payload
+    }),
+  getAuditResult: id => 
+    dispatch({
+      type: "viewCompany/getAuditResult",
+      id
     })
 })
 

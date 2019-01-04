@@ -21,9 +21,9 @@ class MyCompany extends Component {
 
   async _getCompanyList () {
     await this.props.getCompanyList(this.state)
-    // this.props.companyList.forEach((company, index) =>
-    //   fetchImg(company.id, company.companyLogo).then(res => this.props.addCompanyLogo(index, res))  
-    // )
+    this.props.companyList.forEach((company, index) =>
+      fetchImg(company.id, company.companyLogo).then(res => this.props.addCompanyLogo(index, res))  
+    )
   }
 
   handleChangePage (page) {
@@ -35,7 +35,7 @@ class MyCompany extends Component {
   handleViewCompany (id, state) {
     //如果state为0（正常）或1（已停用），则跳转到组织管理，否则跳转到查看公司信息
     if (state === 0 || state === 1) {
-      router.push(`/myCompany/viewCompany/?id=${id}&state=${state}`)
+      window.location.href = ``
     } else {
       router.push(`/myCompany/viewCompany/?id=${id}&state=${state}`)
     }
