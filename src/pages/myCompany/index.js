@@ -15,25 +15,13 @@ class MyCompany extends Component {
   }
 
   componentDidMount () {
-    this._getCompanyList()
-  }
-
-  async _getCompanyList () {
-    await this.props.getCompanyList(this.state)
-    const arr = this.props.companyList.map(company => ({
-      companyId: company.id,
-      fileInfoId: company.companyLogo,
-      moduleCode: "default",
-      productLineId: 1,
-      userId: 1
-    }))
-    this.props.getCompanyLogo(arr)
+    this.props.getCompanyList(this.state)
   }
 
   handleChangePage (page) {
     this.setState({
       pageNum: page
-    }, () => this._getCompanyList())
+    }, () => this.props.getCompanyList(this.state))
   }
   
   handleViewCompany (id, state) {
@@ -62,18 +50,20 @@ class MyCompany extends Component {
           <div style={{ marginTop: "10px" }}>
             <Row gutter={ 20 }>
               {
-                companyList.length? companyList.map((company, index) => (
-                  <Col span={ 8 } key={ index }>
-                    <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
-                      onClick={ () => this.handleViewCompany(company.id, company.state) }
-                    >              
-                      <img src={ company.logo } alt="公司logo" className={ styles.logo } />
-                      <p className={ styles.name }>
-                        <CompanyState state={ company.state } />{ company.name }
-                      </p>
-                    </Card>
-                  </Col>
-                )): (
+                companyList.length? companyList.map((company, index) => {
+                  return (
+                    <Col span={ 8 } key={ index }>
+                      <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }
+                        onClick={ () => this.handleViewCompany(company.id, company.state) }
+                      >              
+                        <img src={ company.logo } alt="公司logo" className={ styles.logo } />
+                        <p className={ styles.name }>
+                          <CompanyState state={ company.state } />{ company.name }
+                        </p>
+                      </Card>
+                    </Col>
+                  )
+                }): (
                   <Col span={ 24 }>
                     <Card style={{ backgroundColor: "#F2F2F2", textAlign: "center", marginBottom: "30px" }} bordered={ false }>
                       <p>暂无公司</p>
@@ -98,12 +88,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "myCompany/getCompanyList", 
       payload
-    }),
-  getCompanyLogo: arr =>
-    dispatch({
-      type: "myCompany/getCompanyLogo",
-      arr
-    })
+    }) 
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyCompany)

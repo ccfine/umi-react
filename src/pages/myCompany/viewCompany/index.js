@@ -16,14 +16,14 @@ class ViewCompany extends Component {
   }
 
   render () {
-    const { loading, companyInformation, auditResult } = this.props,
-          { state, name } = companyInformation
+    const { loading, companyInformation, auditResult, location: { query: { state } } } = this.props,
+          { name } = companyInformation
     
     return (
       <div className="container">
         <Spin spinning={ loading }>
           <h2>
-            <CompanyState state={ state } />{ name }
+            <CompanyState state={ parseInt(state) } />{ name }
           </h2>
           <CompanyInformation information={ companyInformation } result={ auditResult } />
           {

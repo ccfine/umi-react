@@ -1,9 +1,21 @@
 import { Component, Fragment } from "react"
-import { Card, Row, Col, Icon, Modal, Button } from "antd"
+import { Card, Row, Col, Icon, Modal, Button, Form, Input, DatePicker, Select, Upload } from "antd"
+import moment from "moment"
 import PropTypes from "prop-types"
 import { getDate } from "utils/date.js"
 
-export default class CompanyInformation extends Component {
+const formItemLayout = {
+  labelCol: {
+    span: 6
+  },
+  wrapperCol: {
+    span: 14
+  }
+}
+
+const dateFormat = "YYYY-MM-DD"
+
+class CompanyInformation extends Component {
   static propTypes = {
     information: PropTypes.object.isRequired,
     result: PropTypes.object.isRequired
@@ -13,15 +25,13 @@ export default class CompanyInformation extends Component {
     super()
     this.state = {
       visible: false,
-      title: ""
+      info: 1
     }
     this.handleToggleModal = this.handleToggleModal.bind(this)
   }
 
   handleShowConfirm (info) {
-    this.setState({
-      title: info === 1? "公司": info === 2? "法人代表": info === 3? "管理员": ""
-    })
+    this.setState({ info })
 
     Modal.confirm({
       cancelText: "取消",
@@ -38,12 +48,13 @@ export default class CompanyInformation extends Component {
   }
 
   render () {
-    const { information: { state, name, creditCode, companyPlaceRegister, companyPlace, dueStartDate, dueEndDate, companyType, businessScope, companyLogo,
-                           businessLicenceId, legalPersonName, legalPersonCode, legalParValStaTime, legalParValEndTime, legalPersonPhone, legalPersonEmail, 
-                           legalPersonIds, createBy },
-            result: { processRemark, updateBy, updateTime, verificationState }
+    const { information: { state, name, creditCode, companyPlaceRegister, companyPlace, dueStartDate, dueEndDate, companyType, businessScope, companyLogoURL,
+                           businessLicenceIdURL, legalPersonName, legalPersonCode, legalParValStaTime, legalParValEndTime, legalPersonPhone, legalPersonEmail, 
+                           legalPerFacePhotoURL, legalPerBackPhotoURL, createBy, authorizationIdURL },
+            result: { processRemark, updateBy, updateTime, verificationState },
+            form: { getFieldDecorator }
           } = this.props,
-          { visible, title } = this.state
+          { visible, info } = this.state
 
     return (
       <Fragment>
@@ -59,13 +70,12 @@ export default class CompanyInformation extends Component {
               <div style={{ marginBottom: "10px" }}>公司类型：{ companyType === 0? "集团": companyType === 1? "独立公司": companyType === 2? "法人公司": "" }</div>
               <div style={{ marginBottom: "10px" }}>营业范围：{ businessScope }</div>
               <div>
-                公司logo：<img src={ companyLogo } alt="公司logo" />
+                公司logo：<img src={ companyLogoURL } alt="公司logo" />
               </div>
             </Col>  
             <Col span={ 12 }>
-              <div>
-                营业执照证件：<br /><img src={ businessLicenceId }  alt="营业执照证件" />
-              </div>
+              <div style={{ marginBottom: "10px" }}>营业执照证件：</div>
+              <img src={ businessLicenceIdURL } alt="营业执照证件" />
             </Col>
           </Row>     
         </Card>
@@ -79,9 +89,8 @@ export default class CompanyInformation extends Component {
               <div>邮箱：{ legalPersonEmail }</div>
             </Col>  
             <Col span={ 12 }>
-              <div>
-                证件：<br /><img src={ legalPersonIds }  alt="身份证正面" /><img src={ legalPersonIds }  alt="身份证背面" />
-              </div>
+              <div style={{ marginBottom: "10px" }}>证件：</div>
+              <img src={ legalPerFacePhotoURL } alt="身份证正面" style={{ marginRight: "20px" }} /><img src={ legalPerBackPhotoURL } alt="身份证背面" />
             </Col>
           </Row>          
         </Card>
@@ -92,7 +101,7 @@ export default class CompanyInformation extends Component {
             </Col>  
             <Col span={ 12 }>
               <div>
-                授权书：<a>下载</a>
+                授权书：<a href={ authorizationIdURL }>下载</a>
               </div>
             </Col>
           </Row>         
@@ -119,17 +128,186 @@ export default class CompanyInformation extends Component {
           )
         }
 
-        <Modal visible={ visible } title={ `编辑${title}信息` } centered={ true } destroyOnClose={ true } maskClosable={ false }
-          onCancel={ this.handleToggleModal } footer={(
-            <div>
-              <Button onClick={ this.handleToggleModal }>取消</Button>
-              <Button style={{ margin: "0 10px" }} onClick={ this.handleToggleModal }>继续编辑其他信息</Button>
-              <Button type="primary">提交审核</Button>
-            </div>
-          )}
-        >
+        <Modal visible={ visible } title={ `编辑${info === 1? "公司": info === 2? "法人": info === 3? "管理员": ""}信息` } centered={ true } 
+               destroyOnClose={ true } maskClosable={ false } width={ 700 } onCancel={ this.handleToggleModal } 
+               footer={(
+                 <div>
+                   <Button onClick={ this.handleToggleModal }>取消</Button>
+                   <Button style={{ margin: "0 10px" }} onClick={ this.handleToggleModal }>继续编辑其他信息</Button>
+                   <Button type="primary">提交审核</Button>
+                 </div>
+               )}
+        >    
+          {
+            info === 1? (
+              <Form>
+                <Form.Item label="公司名称" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("name", {
+                      initialValue: name
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="统一社会信用代码" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("creditCode", {
+                      initialValue: creditCode
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="公司注册地址" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("companyPlaceRegister", {
+                      initialValue: companyPlaceRegister
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="经营地址" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("companyPlace", {
+                      initialValue: companyPlace
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="营业期限" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("dueDate", {
+                      initialValue: [moment(getDate(dueStartDate), dateFormat), moment(getDate(dueEndDate), dateFormat)]
+                    })(
+                      <DatePicker.RangePicker style={{ width: "100%" }} />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="公司类型" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("companyType", {
+                      initialValue: companyType
+                    })(
+                      <Select>
+                        <Select.Option value={ 0 }>集团</Select.Option>
+                        <Select.Option value={ 1 }>独立公司</Select.Option>
+                        <Select.Option value={ 2 }>法人公司</Select.Option>
+                      </Select>
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="营业范围" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("businessScope", {
+                      initialValue: businessScope
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="公司logo" labelCol={{ span: 6 }}>
+                  {
+                    getFieldDecorator("companyLogoURL", {
+                      
+                    })(
+                      <Upload>
+
+                      </Upload>
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="营业执照证件" labelCol={{ span: 6 }}>
+                  {
+                    getFieldDecorator("businessLicenceIdURL", {
+                      
+                    })(
+                      <Upload>
+
+                      </Upload>                      
+                    )
+                  }
+                </Form.Item>
+              </Form>
+            ): info ===2? (
+              <Form>
+                <Form.Item label="姓名" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("legalPersonName", {
+                      initialValue: legalPersonName
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="身份证号" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("legalPersonCode", {
+                      initialValue: legalPersonCode
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="证件有效期" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("legalDate", {
+                      initialValue: [moment(getDate(legalParValStaTime), dateFormat), moment(getDate(legalParValEndTime), dateFormat)]
+                    })(
+                      <DatePicker.RangePicker style={{ width: "100%" }} />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="手机" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("legalPersonPhone", {
+                      initialValue: legalPersonPhone
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="邮箱" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("legalPersonEmail", {
+                      initialValue: legalPersonEmail
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+                <Form.Item label="证件" labelCol={{ span: 6 }}>
+                  {
+                    getFieldDecorator("legalPerPhotoURL", {
+                      
+                    })(
+                      <Upload>
+
+                      </Upload>
+                    )
+                  }
+                </Form.Item>
+              </Form>
+            ): info === 3? (
+              <Form>
+                <Form.Item label="姓名" { ...formItemLayout }>
+                  {
+                    getFieldDecorator("createBy", {
+                      initialValue: createBy
+                    })(
+                      <Input />
+                    )
+                  }
+                </Form.Item>
+              </Form>         
+            ): null
+          }
         </Modal>
       </Fragment>
     )
   }
 }
+
+export default Form.create()(CompanyInformation)
