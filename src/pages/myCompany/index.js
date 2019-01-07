@@ -16,10 +16,15 @@ class MyCompany extends Component {
       pageNum: 1,
       pageSize: 9
     }
+    this.handleCreateCompany = this.handleCreateCompany.bind(this)
   }
 
   componentDidMount () {
     this.props.getCompanyList(this.state)
+  }
+  
+  handleCreateCompany () {
+    window.location.href = `/#/createCompany`
   }
 
   handleChangePage (page) {
@@ -31,12 +36,13 @@ class MyCompany extends Component {
   handleViewCompany (id, state) {
     //如果state为0（正常）或1（已停用），则跳转到组织管理，否则跳转到查看公司信息
     if (state === 0 || state === 1) {
-      window.location.href = ``
+      window.location.href = `/organization/#/organization?id=${id}`
     } else {
       router.push(`/myCompany/viewCompany/?id=${id}&state=${state}`)
     }
   }
  
+  
   render () {
     const { companyList, loading, total } = this.props
   
@@ -48,7 +54,7 @@ class MyCompany extends Component {
               <h2>我的公司</h2>
             </Col>
             <Col span={ 12 } style={{ textAlign: "right" }}>
-              <Button type="primary">创建或加入公司</Button>
+              <Button type="primary" onClick={ this.handleCreateCompany }>创建或加入公司</Button>
             </Col>
           </Row>
           <div style={{ marginTop: "10px" }}>
