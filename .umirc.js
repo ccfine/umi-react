@@ -9,7 +9,6 @@ export default {
       dva: true,
       dynamicImport: false,
       title: '我的公司',
-      dll: true,
       routes: {
         exclude: [
           /model\.(j|t)sx?$/,

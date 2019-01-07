@@ -49,7 +49,7 @@ class CompanyInformation extends Component {
 
   render () {
     const { information: { state, name, creditCode, companyPlaceRegister, companyPlace, dueStartDate, dueEndDate, companyType, businessScope, companyLogoURL,
-                           businessLicenceIdURL, legalPersonName, legalPersonCode, legalParValStaTime, legalParValEndTime, legalPersonPhone, legalPersonEmail, 
+                           businessLicenceIdURL, legalPersonName, legalPersonCode, legalParValStaTime, legalParValEndTime, legalPersonPhone, legalPersonMail, 
                            legalPerFacePhotoURL, legalPerBackPhotoURL, createBy, authorizationIdURL },
             result: { processRemark, updateBy, updateTime, verificationState },
             form: { getFieldDecorator }
@@ -86,7 +86,7 @@ class CompanyInformation extends Component {
               <div style={{ marginBottom: "10px" }}>身份证号：{ legalPersonCode }</div>
               <div style={{ marginBottom: "10px" }}>证件有效期：{ getDate(legalParValStaTime) } ~ { getDate(legalParValEndTime) }</div>
               <div style={{ marginBottom: "10px" }}>手机：{ legalPersonPhone }</div>
-              <div>邮箱：{ legalPersonEmail }</div>
+              <div>邮箱：{ legalPersonMail }</div>
             </Col>  
             <Col span={ 12 }>
               <div style={{ marginBottom: "10px" }}>证件：</div>
@@ -271,8 +271,8 @@ class CompanyInformation extends Component {
                 </Form.Item>
                 <Form.Item label="邮箱" { ...formItemLayout }>
                   {
-                    getFieldDecorator("legalPersonEmail", {
-                      initialValue: legalPersonEmail
+                    getFieldDecorator("legalPersonMail", {
+                      initialValue: legalPersonMail
                     })(
                       <Input />
                     )

@@ -1,3 +1,7 @@
+/**
+ * title: 查看公司
+ */
+
 import { Component } from "react"
 import { Spin, Button } from "antd"
 import { connect } from "dva"

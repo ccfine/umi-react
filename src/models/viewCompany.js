@@ -61,7 +61,7 @@ export default {
       }
       yield effects.put({
         type: "companyInformation",
-        information: obj
+        information: obj || {}
       })
     },
     * getAuditResult (action, effects) {
@@ -69,7 +69,7 @@ export default {
       const data = yield effects.call(fetchAuditResult, action.id)
       yield effects.put({
         type: "auditResult",
-        result: data.data.data
+        result: data.data.data || {}
       })
     }
   }
